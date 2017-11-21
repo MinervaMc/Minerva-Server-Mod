@@ -1,0 +1,59 @@
+--- net/minecraft/net/minecraft/entity/projectile/EntityThrowable.java
++++ net/minecraft/net/minecraft/entity/projectile/EntityThrowable.java
+@@ -53,6 +53,10 @@
+     public EntityThrowable(World worldIn, EntityLivingBase throwerIn) {
+         this(worldIn, throwerIn.posX, throwerIn.posY + (double)throwerIn.getEyeHeight() - 0.10000000149011612D, throwerIn.posZ);
+         this.thrower = throwerIn;
++        if (throwerIn instanceof EntityPlayer) {
++            EntityPlayer player = (EntityPlayer)throwerIn;
++            this.throwerName = EntityPlayer.getUUID(player.getGameProfile()).toString();
++        }
+     }
+ 
+     protected void entityInit() {
+@@ -108,6 +112,10 @@
+         this.lastTickPosZ = this.posZ;
+         super.onUpdate();
+ 
++//        if (this.isDead) {
++//            return;
++//        }
++
+         if (this.throwableShake > 0) {
+             --this.throwableShake;
+         }
+@@ -269,7 +277,9 @@
+         compound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
+ 
+         if ((this.throwerName == null || this.throwerName.isEmpty()) && this.thrower instanceof EntityPlayer) {
+-            this.throwerName = this.thrower.getName();
++            //this.throwerName = this.thrower.getName();
++            EntityPlayer player = (EntityPlayer)this.thrower;
++            this.throwerName = EntityPlayer.getUUID(player.getGameProfile()).toString();
+         }
+ 
+         compound.setString("ownerName", this.throwerName == null ? "" : this.throwerName);
+@@ -303,16 +313,18 @@
+ 
+     @Nullable
+     public EntityLivingBase getThrower() {
+-        if (this.thrower == null && this.throwerName != null && !this.throwerName.isEmpty()) {
++        //if (this.thrower == null && this.throwerName != null && !this.throwerName.isEmpty()) {
++        if ((this.thrower == null || this.thrower != null && this.thrower.isDead) && this.throwerName != null && !this.throwerName.isEmpty()) {
+             this.thrower = this.world.getPlayerEntityByName(this.throwerName);
+ 
+             if (this.thrower == null && this.world instanceof WorldServer) {
+                 try {
+-                    Entity entity = ((WorldServer)this.world).getEntityFromUuid(UUID.fromString(this.throwerName));
++                    //Entity entity = ((WorldServer)this.world).getEntityFromUuid(UUID.fromString(this.throwerName));
+ 
+-                    if (entity instanceof EntityLivingBase) {
+-                        this.thrower = (EntityLivingBase)entity;
+-                    }
++                    //if (entity instanceof EntityLivingBase) {
++                    //    this.thrower = (EntityLivingBase)entity;
++                    //}
++                    this.thrower = this.world.getPlayerEntityByUUID(UUID.fromString(this.throwerName));
+                 } catch (Throwable var2) {
+                     this.thrower = null;
+                 }

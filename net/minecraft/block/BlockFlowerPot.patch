@@ -1,0 +1,25 @@
+--- net/minecraft/net/minecraft/block/BlockFlowerPot.java
++++ net/minecraft/net/minecraft/block/BlockFlowerPot.java
+@@ -105,6 +105,22 @@
+             return true;
+         }
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        ItemStack itemstack = playerIn.getHeldItem(hand);
++        TileEntityFlowerPot tileentityflowerpot = this.getTileEntity(worldIn, pos);
++
++        if (tileentityflowerpot == null) {
++            return false;
++        } else {
++            if (tileentityflowerpot.getFlowerItemStack().func_190926_b()) {
++                if (!this.func_190951_a(itemstack)) {
++                    return false;
++                }
++            }
++            return true;
++        }
++    }
+ 
+     private boolean func_190951_a(ItemStack p_190951_1_) {
+         Block block = Block.getBlockFromItem(p_190951_1_.getItem());

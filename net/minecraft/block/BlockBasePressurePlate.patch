@@ -1,0 +1,24 @@
+--- net/minecraft/net/minecraft/block/BlockBasePressurePlate.java
++++ net/minecraft/net/minecraft/block/BlockBasePressurePlate.java
+@@ -33,7 +33,7 @@
+     protected BlockBasePressurePlate(Material materialIn, MapColor mapColorIn) {
+         super(materialIn, mapColorIn);
+         this.setCreativeTab(CreativeTabs.REDSTONE);
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+     }
+ 
+     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+@@ -95,12 +95,6 @@
+         return worldIn.getBlockState(pos).isFullyOpaque() || worldIn.getBlockState(pos).getBlock() instanceof BlockFence;
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         if (!worldIn.isRemote) {
+             int i = this.getRedstoneStrength(state);

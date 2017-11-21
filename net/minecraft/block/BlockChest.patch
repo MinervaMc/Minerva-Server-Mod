@@ -1,0 +1,28 @@
+--- net/minecraft/net/minecraft/block/BlockChest.java
++++ net/minecraft/net/minecraft/block/BlockChest.java
+@@ -348,9 +348,7 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             ILockableContainer ilockablecontainer = this.getLockableContainer(worldIn, pos);
+ 
+             if (ilockablecontainer != null) {
+@@ -362,9 +360,12 @@
+                     playerIn.addStat(StatList.TRAPPED_CHEST_TRIGGERED);
+                 }
+             }
+-
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     @Nullable

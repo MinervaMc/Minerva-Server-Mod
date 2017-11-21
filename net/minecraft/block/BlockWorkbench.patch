@@ -1,0 +1,22 @@
+--- net/minecraft/net/minecraft/block/BlockWorkbench.java
++++ net/minecraft/net/minecraft/block/BlockWorkbench.java
+@@ -24,13 +24,15 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             playerIn.displayGui(new BlockWorkbench.InterfaceCraftingTable(worldIn, pos));
+             playerIn.addStat(StatList.CRAFTING_TABLE_INTERACTION);
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     public static class InterfaceCraftingTable implements IInteractionObject {

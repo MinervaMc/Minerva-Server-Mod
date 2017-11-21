@@ -1,0 +1,47 @@
+--- net/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
++++ net/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
+@@ -37,7 +37,7 @@
+ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO {
+     private static final Logger LOGGER = LogManager.getLogger();
+     private final Map<ChunkPos, NBTTagCompound> chunksToRemove = Maps.<ChunkPos, NBTTagCompound>newConcurrentMap();
+-    private final Set<ChunkPos> field_193415_c = Collections.<ChunkPos>newSetFromMap(Maps.newConcurrentMap());
++    //private final Set<ChunkPos> field_193415_c = Collections.<ChunkPos>newSetFromMap(Maps.newConcurrentMap()); // MC-22147 FIX
+ 
+     /** Save directory for chunks using the Anvil format */
+     private final File chunkSaveLocation;
+@@ -123,9 +123,9 @@
+     }
+ 
+     protected void addChunkToPending(ChunkPos pos, NBTTagCompound compound) {
+-        if (!this.field_193415_c.contains(pos)) {
++        //if (!this.field_193415_c.contains(pos)) { // MC-22147 FIX
+             this.chunksToRemove.put(pos, compound);
+-        }
++        //}
+ 
+         ThreadedFileIOBase.getThreadedIOInstance().queueIO(this);
+     }
+@@ -144,8 +144,8 @@
+             ChunkPos chunkpos = this.chunksToRemove.keySet().iterator().next();
+             boolean lvt_3_1_;
+ 
+-            try {
+-                this.field_193415_c.add(chunkpos);
++            //try { // MC-22147 FIX
++            //    this.field_193415_c.add(chunkpos);
+                 NBTTagCompound nbttagcompound = this.chunksToRemove.remove(chunkpos);
+ 
+                 if (nbttagcompound != null) {
+@@ -157,9 +157,9 @@
+                 }
+ 
+                 lvt_3_1_ = true;
+-            } finally {
+-                this.field_193415_c.remove(chunkpos);
+-            }
++            //} finally { // MC-22147 FIX
++            //    this.field_193415_c.remove(chunkpos);
++            //}
+ 
+             return lvt_3_1_;
+         }

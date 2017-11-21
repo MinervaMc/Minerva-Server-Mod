@@ -1,0 +1,153 @@
+--- net/minecraft/net/minecraft/world/WorldServer.java
++++ net/minecraft/net/minecraft/world/WorldServer.java
+@@ -45,6 +45,7 @@
+ import net.minecraft.network.play.server.SPacketParticles;
+ import net.minecraft.network.play.server.SPacketSpawnGlobalEntity;
+ import net.minecraft.profiler.Profiler;
++import net.minecraft.scoreboard.Cycle;
+ import net.minecraft.scoreboard.ScoreboardSaveData;
+ import net.minecraft.scoreboard.ServerScoreboard;
+ import net.minecraft.server.MinecraftServer;
+@@ -59,6 +60,8 @@
+ import net.minecraft.util.math.ChunkPos;
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.util.math.Vec3d;
++import net.minecraft.util.text.ITextComponent;
++import net.minecraft.util.text.TextComponentTranslation;
+ import net.minecraft.village.VillageCollection;
+ import net.minecraft.village.VillageSiege;
+ import net.minecraft.world.biome.Biome;
+@@ -96,7 +99,7 @@
+     public boolean disableLevelSaving;
+ 
+     /** is false if there are no players */
+-    private boolean allPlayersSleeping;
++    private boolean enoughPlayersSleeping;
+     private int updateEntityTick;
+ 
+     /**
+@@ -120,6 +123,9 @@
+         this.calculateInitialSkylight();
+         this.calculateInitialWeather();
+         this.getWorldBorder().setSize(server.getMaxWorldSize());
++        if (dimensionId == 0) {
++            this.worldCycle = new Cycle();
++        }
+     }
+ 
+     public World init() {
+@@ -160,6 +166,10 @@
+             this.getWorldBorder().setTransition(this.worldInfo.getBorderSize());
+         }
+ 
++        if (this.worldCycle != null) {
++            this.worldCycle.init(this.worldScoreboard);
++        }
++
+         return this;
+     }
+ 
+@@ -175,7 +185,7 @@
+ 
+         this.provider.getBiomeProvider().cleanupCache();
+ 
+-        if (this.areAllPlayersAsleep()) {
++        if (this.areEnoughPlayersAsleep()) {
+             if (this.getGameRules().getBoolean("doDaylightCycle")) {
+                 long i = this.worldInfo.getWorldTime() + 24000L;
+                 this.worldInfo.setWorldTime(i - i % 24000L);
+@@ -192,6 +202,7 @@
+ 
+         this.theProfiler.endStartSection("chunkSource");
+         this.chunkProvider.unloadQueuedChunks();
++        this.removeUnloadedTileEntities();
+         int j = this.calculateSkylightSubtracted(1.0F);
+ 
+         if (j != this.getSkylightSubtracted()) {
+@@ -233,27 +244,32 @@
+     /**
+      * Updates the flag that indicates whether or not all players in the world are sleeping.
+      */
+-    public void updateAllPlayersSleepingFlag() {
+-        this.allPlayersSleeping = false;
+-
++    public void updateEnoughPlayersSleepingFlag() {
+         if (!this.playerEntities.isEmpty()) {
+-            int i = 0;
+-            int j = 0;
+-
+-            for (EntityPlayer entityplayer : this.playerEntities) {
+-                if (entityplayer.isSpectator()) {
+-                    ++i;
+-                } else if (entityplayer.isPlayerSleeping()) {
+-                    ++j;
++            if (this.getGameRules().getBoolean("onePlayerSleeping")) {
++                this.enoughPlayersSleeping = false;
++                for (EntityPlayer entityplayer : this.playerEntities) {
++                    if (!entityplayer.isSpectator() && entityplayer.isPlayerSleeping()) {
++                        this.enoughPlayersSleeping = true;
++                        break;
++                    }
++                }
++            } else {
++                this.enoughPlayersSleeping = true;
++                for (EntityPlayer entityplayer : this.playerEntities) {
++                    if (!entityplayer.isSpectator() && !entityplayer.isPlayerSleeping()) {
++                        this.enoughPlayersSleeping = false;
++                        break;
++                    }
+                 }
+             }
+-
+-            this.allPlayersSleeping = j > 0 && j >= this.playerEntities.size() - i;
++        } else {
++            this.enoughPlayersSleeping = false;
+         }
+     }
+ 
+     protected void wakeAllPlayers() {
+-        this.allPlayersSleeping = false;
++        this.enoughPlayersSleeping = false;
+ 
+         for (EntityPlayer entityplayer : this.playerEntities) {
+             if (entityplayer.isPlayerSleeping()) {
+@@ -279,15 +295,23 @@
+     /**
+      * Checks if all players in this world are sleeping.
+      */
+-    public boolean areAllPlayersAsleep() {
+-        if (this.allPlayersSleeping && !this.isRemote) {
+-            for (EntityPlayer entityplayer : this.playerEntities) {
+-                if (!entityplayer.isSpectator() && !entityplayer.isPlayerFullyAsleep()) {
+-                    return false;
++    public boolean areEnoughPlayersAsleep() {
++        if (this.enoughPlayersSleeping && !this.isRemote) {
++            if (this.getGameRules().getBoolean("onePlayerSleeping")) {
++                for (EntityPlayer entityplayer : this.playerEntities) {
++                    if (!entityplayer.isSpectator() && entityplayer.isPlayerFullyAsleep()) {
++                        return true;
++                    }
++                }
++                return false;
++            } else {
++                for (EntityPlayer entityplayer : this.playerEntities) {
++                    if (!entityplayer.isSpectator() && !entityplayer.isPlayerFullyAsleep()) {
++                        return false;
++                    }
+                 }
++                return true;
+             }
+-
+-            return true;
+         } else {
+             return false;
+         }
+@@ -1162,4 +1186,8 @@
+         private ServerBlockEventList() {
+         }
+     }
++    
++    public Cycle getScoreboardCycle() {
++        return this.worldCycle;
++    }
+ }

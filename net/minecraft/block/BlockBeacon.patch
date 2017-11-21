@@ -1,0 +1,27 @@
+--- net/minecraft/net/minecraft/block/BlockBeacon.java
++++ net/minecraft/net/minecraft/block/BlockBeacon.java
+@@ -35,18 +35,19 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             TileEntity tileentity = worldIn.getTileEntity(pos);
+ 
+             if (tileentity instanceof TileEntityBeacon) {
+                 playerIn.displayGUIChest((TileEntityBeacon)tileentity);
+                 playerIn.addStat(StatList.BEACON_INTERACTION);
+             }
+-
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     /**

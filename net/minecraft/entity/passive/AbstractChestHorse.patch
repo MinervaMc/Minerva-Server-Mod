@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/entity/passive/AbstractChestHorse.java
++++ net/minecraft/net/minecraft/entity/passive/AbstractChestHorse.java
+@@ -211,7 +211,7 @@
+             }
+         }
+     }
+-
++    
+     protected void func_190697_dk() {
+         this.playSound(SoundEvents.ENTITY_DONKEY_CHEST, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+     }

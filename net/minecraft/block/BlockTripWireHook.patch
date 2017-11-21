@@ -1,0 +1,24 @@
+--- net/minecraft/net/minecraft/block/BlockTripWireHook.java
++++ net/minecraft/net/minecraft/block/BlockTripWireHook.java
+@@ -38,7 +38,7 @@
+         super(Material.CIRCUITS);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)).withProperty(ATTACHED, Boolean.valueOf(false)));
+         this.setCreativeTab(CreativeTabs.REDSTONE);
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+     }
+ 
+     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+@@ -209,12 +209,6 @@
+         }
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         this.calculateState(worldIn, pos, state, false, true, -1, (IBlockState)null);
+     }

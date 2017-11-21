@@ -1,0 +1,68 @@
+--- net/minecraft/net/minecraft/entity/EntityLiving.java
++++ net/minecraft/net/minecraft/entity/EntityLiving.java
+@@ -659,7 +659,37 @@
+         if (this.persistenceRequired) {
+             this.entityAge = 0;
+         } else {
+-            Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
++            if (this.canDespawn()) {
++                boolean isCloseEnough = false;
++                boolean isTooFarAway = true;
++                boolean playerInDimension = false;
++
++                for (int i = 0; i < this.world.playerEntities.size(); i++) {
++                    EntityPlayer entityplayer = this.world.playerEntities.get(i);
++                    if (!entityplayer.isSpectator()) {
++                        playerInDimension = true;
++                        double distanceSq = entityplayer.getDistanceSq(this.posX, this.posY, this.posZ);
++                        if (distanceSq <= 1024.0D) {
++                            isCloseEnough = true;
++                            break;
++                        }
++                        if (distanceSq <= 16384.0D) {
++                            isTooFarAway = false;
++                        }
++                    }
++                }
++                if (playerInDimension) {
++                    if (isCloseEnough) {
++                        this.entityAge = 0;
++                    } else if (isTooFarAway || (this.entityAge > 600 && this.rand.nextInt(800) == 0)) {
++                        this.setDead();
++                    }
++                }
++            } else {
++                this.entityAge = 0;
++            }
++
++            /*Entity entity = this.world.getClosestPlayerToEntity(this, -1.0D);
+ 
+             if (entity != null) {
+                 double d0 = entity.posX - this.posX;
+@@ -676,8 +706,26 @@
+                 } else if (d3 < 1024.0D) {
+                     this.entityAge = 0;
+                 }
++            }*/
++        }
++    }
++
++    public boolean willImmediatelyDespawn() {
++        if (!this.canDespawn() || this.persistenceRequired) {
++            return false;
++        }
++        boolean playerInDimension = false; // needed???? probably not
++        for (int i = 0; i < this.world.playerEntities.size(); i++) {
++            EntityPlayer entityplayer = this.world.playerEntities.get(i);
++            if (!entityplayer.isSpectator()) {
++                playerInDimension = true;
++                double distanceSq = entityplayer.getDistanceSq(this.posX, this.posY, this.posZ);
++                if (distanceSq <= 16384.0D) {
++                    return false;
++                }
+             }
+         }
++        return playerInDimension;
+     }
+ 
+     protected final void updateEntityActionState() {

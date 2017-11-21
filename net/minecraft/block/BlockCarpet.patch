@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/block/BlockCarpet.java
++++ net/minecraft/net/minecraft/block/BlockCarpet.java
+@@ -22,7 +22,7 @@
+     protected BlockCarpet() {
+         super(Material.CARPET);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.DECORATIONS);
+     }
+ 

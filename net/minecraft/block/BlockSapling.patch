@@ -1,0 +1,10 @@
+--- net/minecraft/net/minecraft/block/BlockSapling.java
++++ net/minecraft/net/minecraft/block/BlockSapling.java
+@@ -30,6 +30,7 @@
+ 
+     protected BlockSapling() {
+         this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, BlockPlanks.EnumType.OAK).withProperty(STAGE, Integer.valueOf(0)));
++        this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.DECORATIONS);
+     }
+ 

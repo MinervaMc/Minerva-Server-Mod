@@ -1,0 +1,13 @@
+--- net/minecraft/net/minecraft/block/BlockTrapDoor.java
++++ net/minecraft/net/minecraft/block/BlockTrapDoor.java
+@@ -94,6 +94,10 @@
+             return true;
+         }
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return this.blockMaterial != Material.IRON;
++    }
+ 
+     protected void playSound(@Nullable EntityPlayer player, World worldIn, BlockPos pos, boolean p_185731_4_) {
+         if (p_185731_4_) {

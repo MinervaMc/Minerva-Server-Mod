@@ -1,0 +1,102 @@
+--- net/minecraft/net/minecraft/entity/player/EntityPlayerMP.java
++++ net/minecraft/net/minecraft/entity/player/EntityPlayerMP.java
+@@ -100,6 +100,7 @@
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.util.math.Vec3d;
++import net.minecraft.util.text.TextComponentString;
+ import net.minecraft.util.text.ChatType;
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraft.util.text.Style;
+@@ -192,6 +193,11 @@
+      */
+     public boolean playerConqueredTheEnd;
+ 
++    private long playerForceAfkStartTime = System.currentTimeMillis();
++
++    public boolean afk;
++    public boolean forceAfk;
++
+     public EntityPlayerMP(MinecraftServer server, WorldServer worldIn, GameProfile profile, PlayerInteractionManager interactionManagerIn) {
+         super(worldIn, profile);
+         interactionManagerIn.thisPlayerMP = this;
+@@ -1049,12 +1055,16 @@
+             this.lastPortalPos = p_193104_1_.lastPortalPos;
+             this.lastPortalVec = p_193104_1_.lastPortalVec;
+             this.teleportDirection = p_193104_1_.teleportDirection;
+-        } else if (this.world.getGameRules().getBoolean("keepInventory") || p_193104_1_.isSpectator()) {
+-            this.inventory.copyInventory(p_193104_1_.inventory);
+-            this.experienceLevel = p_193104_1_.experienceLevel;
+-            this.experienceTotal = p_193104_1_.experienceTotal;
+-            this.experience = p_193104_1_.experience;
+-            this.setScore(p_193104_1_.getScore());
++        } else {
++            if (this.world.getGameRules().getBoolean("keepInventory") || p_193104_1_.isSpectator()) {
++                this.inventory.copyInventory(p_193104_1_.inventory);
++            }
++            if (this.world.getGameRules().getBoolean("keepXP") || p_193104_1_.isSpectator()) {
++                this.experienceLevel = p_193104_1_.experienceLevel;
++                this.experienceTotal = p_193104_1_.experienceTotal;
++                this.experience = p_193104_1_.experience;
++                this.setScore(p_193104_1_.getScore());
++            }
+         }
+ 
+         this.xpSeed = p_193104_1_.xpSeed;
+@@ -1174,7 +1184,7 @@
+     public boolean canCommandSenderUseCommand(int permLevel, String commandName) {
+         if ("seed".equals(commandName) && !this.mcServer.isDedicatedServer()) {
+             return true;
+-        } else if (!"tell".equals(commandName) && !"help".equals(commandName) && !"me".equals(commandName) && !"trigger".equals(commandName)) {
++        } else if (!"tell".equals(commandName) && !"help".equals(commandName) && !"me".equals(commandName) && !"trigger".equals(commandName) && !"afk".equals(commandName)) {
+             if (this.mcServer.getPlayerList().canSendCommands(this.getGameProfile())) {
+                 UserListOpsEntry userlistopsentry = (UserListOpsEntry)this.mcServer.getPlayerList().getOppedPlayers().getEntry(this.getGameProfile());
+ 
+@@ -1229,6 +1239,47 @@
+         this.playerLastActiveTime = MinecraftServer.getCurrentTimeMillis();
+     }
+ 
++    public void forcePlayerAfk() {
++        this.playerForceAfkStartTime = MinecraftServer.getCurrentTimeMillis();
++        this.forceAfk = true;
++    }
++
++    public void forcePlayerNotAfk() {
++        this.forceAfk = false;
++    }
++
++    public boolean isAfkForced() {
++        return this.forceAfk;
++    }
++
++    public void setAfk() {
++        if (!this.afk) {
++            this.afk = true;
++            if(!this.world.getScoreboard().addPlayerToTeam(this.getName(), "AFK")) {
++                //LOGGER.warn("To Luflosi: addPlayerToTeam failed");
++            }
++            this.mcServer.getPlayerList().sendChatMsgImpl(new TextComponentString("").appendSibling(this.getDisplayName()).appendText(" is now AFK"), false);
++        }
++    }
++
++    public void setNotAfk() {
++        if (this.afk) {
++            this.afk = false;
++            this.forceAfk = false;
++            this.world.getMinecraftServer().getPlayerList().sendChatMsgImpl(new TextComponentString("").appendSibling(this.getDisplayName()).appendText(" is no longer AFK"), false);
++            if(!this.world.getScoreboard().removePlayerFromTeams(this.getName())) {
++                //LOGGER.warn("To Luflosi: removePlayerFromTeams failed");
++            }
++            if(!this.world.getScoreboard().addPlayerToTeam(this.getName(), "players")) {
++                //LOGGER.warn("To Luflosi: addPlayerToTeam failed");
++            }
++        }
++    }
++
++    public long getForceAfkStartTime() {
++        return this.playerForceAfkStartTime;
++    }
++
+     /**
+      * Gets the stats file for reading achievements
+      */

@@ -1,0 +1,24 @@
+--- net/minecraft/net/minecraft/block/BlockRedstoneTorch.java
++++ net/minecraft/net/minecraft/block/BlockRedstoneTorch.java
+@@ -53,7 +53,7 @@
+ 
+     protected BlockRedstoneTorch(boolean isOn) {
+         this.isOn = isOn;
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab((CreativeTabs)null);
+     }
+ 
+@@ -95,12 +95,6 @@
+         return worldIn.isSidePowered(pos.offset(enumfacing), enumfacing);
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         boolean flag = this.shouldBeOff(worldIn, pos, state);
+         List<BlockRedstoneTorch.Toggle> list = (List)toggles.get(worldIn);

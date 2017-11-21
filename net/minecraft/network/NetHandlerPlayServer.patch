@@ -1,0 +1,90 @@
+--- net/minecraft/net/minecraft/network/NetHandlerPlayServer.java
++++ net/minecraft/net/minecraft/network/NetHandlerPlayServer.java
+@@ -40,6 +40,7 @@
+ import net.minecraft.inventory.EntityEquipmentSlot;
+ import net.minecraft.inventory.IInventory;
+ import net.minecraft.inventory.Slot;
++import net.minecraft.item.ItemBlock;
+ import net.minecraft.item.ItemElytra;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.item.ItemWritableBook;
+@@ -175,6 +176,7 @@
+         networkManagerIn.setNetHandler(this);
+         this.playerEntity = playerIn;
+         playerIn.connection = this;
++        this.lastPingTime = this.currentTimeMillis();
+     }
+ 
+     /**
+@@ -243,8 +245,12 @@
+             --this.itemDropThreshold;
+         }
+ 
+-        if (this.playerEntity.getLastActiveTime() > 0L && this.serverController.getMaxPlayerIdleMinutes() > 0 && MinecraftServer.getCurrentTimeMillis() - this.playerEntity.getLastActiveTime() > (long)(this.serverController.getMaxPlayerIdleMinutes() * 1000 * 60)) {
+-            this.func_194028_b(new TextComponentTranslation("multiplayer.disconnect.idling", new Object[0]));
++        //if (this.playerEntity.getLastActiveTime() > 0L && this.serverController.getMaxPlayerIdleMinutes() > 0 && MinecraftServer.getCurrentTimeMillis() - this.playerEntity.getLastActiveTime() > (long)(this.serverController.getMaxPlayerIdleMinutes() * 1000 * 60)) {
++        if (this.playerEntity.getLastActiveTime() > 0L && this.serverController.getMaxPlayerIdleTicks() > 0 && (this.playerEntity.isAfkForced() || (MinecraftServer.getCurrentTimeMillis() - this.playerEntity.getLastActiveTime() > this.serverController.getMaxPlayerIdleTicks()))) {
++            this.playerEntity.setAfk();
++            //this.func_194028_b(new TextComponentTranslation("multiplayer.disconnect.idling", new Object[0]));
++        } else {
++            this.playerEntity.setNotAfk();
+         }
+     }
+ 
+@@ -505,6 +511,10 @@
+                             this.playerEntity.setPositionAndRotation(d4, d5, d6, f, f1);
+                             this.playerEntity.addMovementStat(this.playerEntity.posX - d0, this.playerEntity.posY - d1, this.playerEntity.posZ - d2);
+ 
++                            if (((this.playerEntity.posX - d0) != 0.0D) || ((this.playerEntity.posY - d1) != 0.0D) || ((this.playerEntity.posZ - d2) != 0.0D)) { // floating point inaccuracy?
++                                this.playerEntity.markPlayerActive();
++                            }
++
+                             if (!this.playerEntity.noClip && !this.playerEntity.isPlayerSleeping()) {
+                                 boolean flag1 = worldserver.getCollisionBoxes(this.playerEntity, this.playerEntity.getEntityBoundingBox().contract(0.0625D)).isEmpty();
+ 
+@@ -646,9 +656,14 @@
+         EnumFacing enumfacing = packetIn.getDirection();
+         this.playerEntity.markPlayerActive();
+ 
+-        if (blockpos.getY() < this.serverController.getBuildLimit() - 1 || enumfacing != EnumFacing.UP && blockpos.getY() < this.serverController.getBuildLimit()) {
+-            if (this.targetPos == null && this.playerEntity.getDistanceSq((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D) < 64.0D && !this.serverController.isBlockProtected(worldserver, blockpos, this.playerEntity) && worldserver.getWorldBorder().contains(blockpos)) {
+-                this.playerEntity.interactionManager.processRightClickBlock(this.playerEntity, worldserver, itemstack, enumhand, blockpos, enumfacing, packetIn.getFacingX(), packetIn.getFacingY(), packetIn.getFacingZ());
++        IBlockState iblockstate = worldserver.getBlockState(blockpos);
++        if ((blockpos.getY() < this.serverController.getBuildLimit() - 1 || enumfacing != EnumFacing.UP && blockpos.getY() < this.serverController.getBuildLimit()) || ((!this.playerEntity.isSneaking() || this.playerEntity.getHeldItemMainhand().func_190926_b() && this.playerEntity.getHeldItemOffhand().func_190926_b()) && (worldserver.getBlockState(blockpos).getBlock().canActivateBlock(worldserver, blockpos, iblockstate, this.playerEntity, enumhand, enumfacing, packetIn.getFacingX(), packetIn.getFacingY(), packetIn.getFacingZ()))) || (itemstack != null && !(itemstack.getItem() instanceof ItemBlock))) {
++            if (this.targetPos == null) {
++                if (this.playerEntity.getDistanceSq((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D) < 64.0D && !this.serverController.isBlockProtected(worldserver, blockpos, this.playerEntity) && worldserver.getWorldBorder().contains(blockpos)) {
++                    this.playerEntity.interactionManager.processRightClickBlock(this.playerEntity, worldserver, itemstack, enumhand, blockpos, enumfacing, packetIn.getFacingX(), packetIn.getFacingY(), packetIn.getFacingZ());
++                } else {
++                    this.playerEntity.interactionManager.theWorld.notifyBlockUpdate(blockpos, iblockstate, iblockstate, 0); // correct?
++                }
+             }
+         } else {
+             TextComponentTranslation textcomponenttranslation = new TextComponentTranslation("build.tooHigh", new Object[] {this.serverController.getBuildLimit()});
+@@ -740,11 +755,24 @@
+      * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
+      */
+     public void onDisconnect(ITextComponent reason) {
++        this.playerEntity.setNotAfk();
++
+         LOGGER.info("{} lost connection: {}", this.playerEntity.getName(), reason.getUnformattedText());
+         this.serverController.refreshStatusNextTick();
+-        TextComponentTranslation textcomponenttranslation = new TextComponentTranslation("multiplayer.player.left", new Object[] {this.playerEntity.getDisplayName()});
+-        textcomponenttranslation.getStyle().setColor(TextFormatting.YELLOW);
+-        this.serverController.getPlayerList().sendChatMsg(textcomponenttranslation);
++        //TextComponentTranslation textcomponenttranslation = new TextComponentTranslation("multiplayer.player.left", new Object[] {this.playerEntity.getDisplayName()});
++        //textcomponenttranslation.getStyle().setColor(TextFormatting.YELLOW);
++        //this.serverController.getPlayerList().sendChatMsg(textcomponenttranslation);
++
++        ITextComponent textcomponent = null;
++        if (this.playerEntity.isEntityAlive()) {
++            textcomponent = new TextComponentTranslation("multiplayer.player.left", new Object[] {this.playerEntity.getDisplayName()});
++        } else {
++            //textcomponent = new TextComponentTranslation("multiplayer.player.ragequit", new Object[] {this.playerEntity.getDisplayName()});
++            textcomponent = new TextComponentString("").appendSibling(this.playerEntity.getDisplayName()).appendText(" ragequit");
++        }
++        textcomponent.getStyle().setColor(TextFormatting.YELLOW);
++        this.serverController.getPlayerList().sendChatMsg(textcomponent);
++
+         this.playerEntity.mountEntityAndWakeUp();
+         this.serverController.getPlayerList().playerLoggedOut(this.playerEntity);
+ 

@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/block/BlockTorch.java
++++ net/minecraft/net/minecraft/block/BlockTorch.java
+@@ -34,7 +34,7 @@
+     protected BlockTorch() {
+         super(Material.CIRCUITS);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.DECORATIONS);
+     }
+ 

@@ -1,0 +1,23 @@
+--- net/minecraft/net/minecraft/world/WorldEntitySpawner.java
++++ net/minecraft/net/minecraft/world/WorldEntitySpawner.java
+@@ -124,12 +124,17 @@
+ 
+                                                 entityliving.setLocationAndAngles((double)f, (double)i3, (double)f1, worldServerIn.rand.nextFloat() * 360.0F, 0.0F);
+ 
+-                                                if (entityliving.getCanSpawnHere() && entityliving.isNotColliding()) {
++                                                boolean isNotColliding = entityliving.isNotColliding();
++                                                if (entityliving.getCanSpawnHere() && isNotColliding) {
+                                                     ientitylivingdata = entityliving.onInitialSpawn(worldServerIn.getDifficultyForLocation(new BlockPos(entityliving)), ientitylivingdata);
+ 
+-                                                    if (entityliving.isNotColliding()) {
++                                                    if (isNotColliding) {
+                                                         ++j2;
+-                                                        worldServerIn.spawnEntityInWorld(entityliving);
++                                                        if (entityliving.willImmediatelyDespawn()) {
++                                                            entityliving.setDead();
++                                                        } else {
++                                                            worldServerIn.spawnEntityInWorld(entityliving);
++                                                        }
+                                                     } else {
+                                                         entityliving.setDead();
+                                                     }

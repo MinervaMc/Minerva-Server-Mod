@@ -1,0 +1,18 @@
+--- net/minecraft/net/minecraft/block/BlockSign.java
++++ net/minecraft/net/minecraft/block/BlockSign.java
+@@ -82,6 +82,15 @@
+             return tileentity instanceof TileEntitySign ? ((TileEntitySign)tileentity).executeCommand(playerIn) : false;
+         }
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        if (worldIn.isRemote) {
++            return true;
++        } else {
++            TileEntity tileentity = worldIn.getTileEntity(pos);
++            return tileentity instanceof TileEntitySign ? true : false;
++        }
++    }
+ 
+     public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+         return !this.hasInvalidNeighbor(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos);

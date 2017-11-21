@@ -1,0 +1,69 @@
+--- net/minecraft/net/minecraft/entity/player/EntityPlayer.java
++++ net/minecraft/net/minecraft/entity/player/EntityPlayer.java
+@@ -1344,7 +1344,8 @@
+         this.motionZ = 0.0D;
+ 
+         if (!this.world.isRemote) {
+-            this.world.updateAllPlayersSleepingFlag();
++            this.world.updateEnoughPlayersSleepingFlag();
++            this.world.getMinecraftServer().getPlayerList().sendChatMsgImpl(new TextComponentString("").appendSibling(this.getDisplayName()).appendText(" is now sleeping"), false);
+         }
+ 
+         return EntityPlayer.SleepResult.OK;
+@@ -1385,7 +1386,7 @@
+         this.sleeping = false;
+ 
+         if (!this.world.isRemote && updateWorldFlag) {
+-            this.world.updateAllPlayersSleepingFlag();
++            this.world.updateEnoughPlayersSleepingFlag();
+         }
+ 
+         this.sleepTimer = immediately ? 0 : 100;
+@@ -1752,7 +1753,7 @@
+      * Get the experience points the entity currently has.
+      */
+     protected int getExperiencePoints(EntityPlayer player) {
+-        if (!this.world.getGameRules().getBoolean("keepInventory") && !this.isSpectator()) {
++        if (!this.world.getGameRules().getBoolean("keepXP") && !this.isSpectator()) {
+             int i = this.experienceLevel * 7;
+             return i > 100 ? 100 : i;
+         } else {
+@@ -1908,13 +1909,20 @@
+ 
+         if (this.isPlayerSleeping()) {
+             f = 0.2F;
++        } else if (this.isElytraFlying() || this.height == 0.6F) {
++            f = 0.4F;
++        } else if (this.isSneaking() || this.height == 1.65F) {
++            f -= 0.08F;
++        }
++        /*if (this.isPlayerSleeping()) {
++            f = 0.2F;
+         } else if (!this.isSneaking() && this.height != 1.65F) {
+             if (this.isElytraFlying() || this.height == 0.6F) {
+                 f = 0.4F;
+             }
+         } else {
+             f -= 0.08F;
+-        }
++        }*/
+ 
+         return f;
+     }
+@@ -2084,6 +2092,16 @@
+         return this.capabilities.isCreativeMode && this.canCommandSenderUseCommand(2, "");
+     }
+ 
++    public void forcePlayerAfk() {
++    }
++
++    public void forcePlayerNotAfk() {
++    }
++
++    public boolean isAfkForced() {
++        return false;
++    }
++
+     public static enum EnumChatVisibility {
+         FULL(0, "options.chat.visibility.full"),
+         SYSTEM(1, "options.chat.visibility.system"),

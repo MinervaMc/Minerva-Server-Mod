@@ -1,0 +1,86 @@
+--- net/minecraft/net/minecraft/command/server/CommandScoreboard.java
++++ net/minecraft/net/minecraft/command/server/CommandScoreboard.java
+@@ -23,6 +23,7 @@
+ import net.minecraft.nbt.NBTException;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.nbt.NBTUtil;
++import net.minecraft.scoreboard.Cycle;
+ import net.minecraft.scoreboard.IScoreCriteria;
+ import net.minecraft.scoreboard.Score;
+ import net.minecraft.scoreboard.ScoreObjective;
+@@ -160,6 +161,34 @@
+ 
+                         this.applyPlayerTag(server, sender, args, 2);
+                     }
++                } else if ("cycle".equalsIgnoreCase(args[0])) {
++                    if (args.length == 1) {
++                        throw new WrongUsageException("commands.scoreboard.cycle.usage", new Object[0]);
++                    }
++
++                    if ("on".equalsIgnoreCase(args[1])) {
++                        if (args.length > 3) {
++                            throw new WrongUsageException("commands.scoreboard.cycle.on.usage", new Object[0]);
++                        }
++
++                        this.cycleOn(server, sender);
++                    } else if ("off".equalsIgnoreCase(args[1])) {
++                        if (args.length > 3) {
++                            throw new WrongUsageException("commands.scoreboard.cycle.off.usage", new Object[0]);
++                        }
++
++                        this.cycleOff(server, sender);
++                    } else {
++                        if (!"reload".equalsIgnoreCase(args[1])) {
++                            throw new WrongUsageException("commands.scoreboard.cycle.usage", new Object[0]);
++                        }
++
++                        if (args.length > 3) {
++                            throw new WrongUsageException("commands.scoreboard.cycle.reload.usage", new Object[0]);
++                        }
++
++                        this.cycleReload(server, sender);
++                    }
+                 } else {
+                     if (!"teams".equalsIgnoreCase(args[0])) {
+                         throw new WrongUsageException("commands.scoreboard.usage", new Object[0]);
+@@ -896,9 +925,28 @@
+         }
+     }
+ 
++    protected void cycleOn(MinecraftServer server, ICommandSender sender) {
++        server.worldServerForDimension(0).getScoreboardCycle().on(server);
++        notifyCommandListener(sender, this, "commands.scoreboard.cycle.on.success");
++    }
++
++    protected void cycleOff(MinecraftServer server, ICommandSender sender) {
++        server.worldServerForDimension(0).getScoreboardCycle().off(server);
++        notifyCommandListener(sender, this, "commands.scoreboard.cycle.off.success");
++    }
++
++    protected void cycleReload(MinecraftServer server, ICommandSender sender) {
++        if (server.worldServerForDimension(0).getScoreboardCycle().reload(server.worldServerForDimension(0).getScoreboard())) {
++            notifyCommandListener(sender, this, "commands.scoreboard.cycle.reload.success");
++        } else {
++            notifyCommandListener(sender, this, "commands.scoreboard.cycle.reload.errorExecuting");
++        }
++    }
++
++
+     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+         if (args.length == 1) {
+-            return getListOfStringsMatchingLastWord(args, new String[] {"objectives", "players", "teams"});
++            return getListOfStringsMatchingLastWord(args, new String[] {"objectives", "players", "cycle", "teams"});
+         } else {
+             if ("objectives".equalsIgnoreCase(args[0])) {
+                 if (args.length == 2) {
+@@ -985,6 +1033,10 @@
+                         return getListOfStringsMatchingLastWord(args, this.getObjectiveNames(true, server));
+                     }
+                 }
++            } else if ("cycle".equalsIgnoreCase(args[0])) {
++                if (args.length == 2) {
++                    return getListOfStringsMatchingLastWord(args, new String[] {"on", "off", "reload"});
++                }
+             } else if ("teams".equalsIgnoreCase(args[0])) {
+                 if (args.length == 2) {
+                     return getListOfStringsMatchingLastWord(args, new String[] {"add", "remove", "join", "leave", "empty", "list", "option"});

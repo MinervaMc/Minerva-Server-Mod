@@ -1,0 +1,26 @@
+--- net/minecraft/net/minecraft/block/BlockEnchantmentTable.java
++++ net/minecraft/net/minecraft/block/BlockEnchantmentTable.java
+@@ -58,17 +58,18 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             TileEntity tileentity = worldIn.getTileEntity(pos);
+ 
+             if (tileentity instanceof TileEntityEnchantmentTable) {
+                 playerIn.displayGui((TileEntityEnchantmentTable)tileentity);
+             }
+-
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     /**

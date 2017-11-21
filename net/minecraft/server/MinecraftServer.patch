@@ -1,0 +1,192 @@
+--- net/minecraft/net/minecraft/server/MinecraftServer.java
++++ net/minecraft/net/minecraft/server/MinecraftServer.java
+@@ -27,6 +27,7 @@
+ import java.util.Collections;
+ import java.util.Date;
+ import java.util.List;
++import java.util.Locale;
+ import java.util.Queue;
+ import java.util.Random;
+ import java.util.UUID;
+@@ -49,6 +50,7 @@
+ import net.minecraft.init.Bootstrap;
+ import net.minecraft.network.NetworkSystem;
+ import net.minecraft.network.ServerStatusResponse;
++import net.minecraft.network.play.server.SPacketPlayerListHeaderFooter;
+ import net.minecraft.network.play.server.SPacketTimeUpdate;
+ import net.minecraft.profiler.ISnooperInfo;
+ import net.minecraft.profiler.Profiler;
+@@ -67,6 +69,7 @@
+ import net.minecraft.util.math.MathHelper;
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraft.util.text.TextComponentString;
++import net.minecraft.util.text.TextFormatting;
+ import net.minecraft.world.EnumDifficulty;
+ import net.minecraft.world.GameType;
+ import net.minecraft.world.MinecraftException;
+@@ -152,7 +155,7 @@
+ 
+     /** Maximum build height. */
+     private int buildLimit;
+-    private int maxPlayerIdleMinutes;
++    private long maxPlayerIdleTicks;
+     public final long[] tickTimeArray = new long[100];
+ 
+     /** Stats are [dimension][tick%100] system.nanoTime is stored. */
+@@ -466,41 +469,108 @@
+     public void run() {
+         try {
+             if (this.startServer()) {
+-                this.currentTime = getCurrentTimeMillis();
+-                long i = 0L;
++                long referenceTime = getCurrentTimeMillis();
++                this.currentTime = referenceTime;
++                long lastTpsCalcTime = referenceTime;
++                long nextTpsCalcTime = referenceTime + 1000L;
++                int lastTpsCalcTickCounter = this.tickCounter - 1;
++                final byte calcTpsOverSeconds = 10;
++                int[] numTicksArray = new int[calcTpsOverSeconds];
++                long[] loopTimeArray = new long[calcTpsOverSeconds];
++                long[] tickTimeArray = new long[calcTpsOverSeconds];
++                byte arrayIndex = 0;
++                int ticksSum = 20 * calcTpsOverSeconds;
++                long scaledLoopTimeSum = 0;
++                long scaledTickLengthSum = 0;
++                long tickLengthSum = 0;
++                for (byte i = 0; i < calcTpsOverSeconds; i++) {
++                    numTicksArray[i] = 20;
++                    loopTimeArray[i] = (50L * 20L) << 24;
++                    scaledLoopTimeSum = scaledLoopTimeSum >> 1;
++                    scaledLoopTimeSum += loopTimeArray[i];
++                }
+                 this.statusResponse.setServerDescription(new TextComponentString(this.motd));
+                 this.statusResponse.setVersion(new ServerStatusResponse.Version("1.12", 335));
+                 this.applyServerIconToResponse(this.statusResponse);
+ 
+-                while (this.serverRunning) {
+-                    long k = getCurrentTimeMillis();
+-                    long j = k - this.currentTime;
++                ITextComponent header = new TextComponentString("");
++                String footerEnd = TextFormatting.DARK_GRAY + " ping";
+ 
+-                    if (j > 2000L && this.currentTime - this.timeOfLastWarning >= 15000L) {
+-                        LOG.warn("Can't keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", Long.valueOf(j), Long.valueOf(j / 50L));
+-                        j = 2000L;
+-                        this.timeOfLastWarning = this.currentTime;
++                while (this.serverRunning) {
++                    long before = getCurrentTimeMillis();
++                    this.currentTime = before;
++                    this.tick();
++                    long after = getCurrentTimeMillis();
++                    long tickLength = after - before;
++                    long runningBehind = before - referenceTime;
++
++                    if (runningBehind > 2000L && after - this.timeOfLastWarning >= 15000L) {
++                        LOG.warn("Can\'t keep up! Did the system time change, or is the server overloaded? Running {}ms behind, skipping {} tick(s)", Long.valueOf(runningBehind), Long.valueOf((runningBehind - (2000L + 1L)) / 50L + 1L));
++                        referenceTime = before - 2000L;
++                        runningBehind = 2000L;
++                        this.timeOfLastWarning = after;
+                     }
+ 
+-                    if (j < 0L) {
++                    if (tickLength < 0L || runningBehind < -50L) {
+                         LOG.warn("Time ran backwards! Did the system time change?");
+-                        j = 0L;
++                        tickLength = 0L;
++                        runningBehind = 0L;
++                        referenceTime = before;
+                     }
+ 
+-                    i += j;
+-                    this.currentTime = k;
+-
+-                    if (this.worldServers[0].areAllPlayersAsleep()) {
+-                        this.tick();
+-                        i = 0L;
+-                    } else {
+-                        while (i > 50L) {
+-                            i -= 50L;
+-                            this.tick();
++                    //if (!warper.isWarping()) {
++                        long sleepTime = 50L - tickLength - runningBehind;
++                        if (sleepTime < 0L) {
++                            sleepTime = 0L;
++                            if (tickLength < 40L) {
++                                sleepTime += 40L - tickLength;
++                            }
+                         }
++                        if (sleepTime > 0L) {
++                            Thread.sleep(sleepTime);
++                        }
++                        referenceTime += 50L;
++                    /*} else {
++                        warper.tick();
++                        referenceTime = before;
++                    }*/
++
++                    tickLengthSum += tickLength;
++                    if (after >= nextTpsCalcTime) {
++                        ticksSum -= numTicksArray[arrayIndex];
++                        numTicksArray[arrayIndex] = this.tickCounter - lastTpsCalcTickCounter;
++                        ticksSum += numTicksArray[arrayIndex];
++
++                        scaledLoopTimeSum -= loopTimeArray[arrayIndex] >> 9;
++                        scaledLoopTimeSum = scaledLoopTimeSum >> 1;
++                        loopTimeArray[arrayIndex] = (before - lastTpsCalcTime) << 24;
++                        scaledLoopTimeSum += loopTimeArray[arrayIndex];
++
++                        scaledTickLengthSum -= tickTimeArray[arrayIndex] >> 9;
++                        scaledTickLengthSum = scaledTickLengthSum >> 1;
++                        tickTimeArray[arrayIndex] = tickLengthSum << 24;
++                        scaledTickLengthSum += tickTimeArray[arrayIndex];
++
++                        arrayIndex++;
++                        if (arrayIndex >= calcTpsOverSeconds) {
++                            arrayIndex = 0;
++                        }
++                        float tps = ticksSum*102300L/(float)(scaledLoopTimeSum>>15);
++                        long mspt = (scaledTickLengthSum*5L)/(ticksSum*16760832L);
++                        String footerBeginning = TextFormatting.GRAY + String.format(Locale.ROOT, "%.2f", tps) + TextFormatting.DARK_GRAY + " TPS  " + TextFormatting.GRAY + String.format(Locale.ROOT, "%d", mspt) + TextFormatting.DARK_GRAY + " MSPT " + TextFormatting.GRAY;
++                        for (int i = 0; i < this.playerList.getPlayerList().size(); i++) {
++                            EntityPlayerMP playerEntity = this.playerList.getPlayerList().get(i);
++                            int ping = playerEntity.ping;
++                            ITextComponent footer = new TextComponentString(footerBeginning + String.format(Locale.ROOT, "%d", ping) + footerEnd);
++                            SPacketPlayerListHeaderFooter packet = new SPacketPlayerListHeaderFooter(header, footer);
++                            playerEntity.connection.sendPacket(packet);
++                        }
++                        tickLengthSum = 0;
++                        lastTpsCalcTickCounter = this.tickCounter;
++                        lastTpsCalcTime = before;
++                        nextTpsCalcTime = after + 1000L;
+                     }
+ 
+-                    Thread.sleep(Math.max(1L, 50L - i));
+                     this.serverIsRunning = true;
+                 }
+             } else {
+@@ -618,6 +688,9 @@
+         this.theProfiler.startSection("tallying");
+         this.tickTimeArray[this.tickCounter % 100] = System.nanoTime() - i;
+         this.theProfiler.endSection();
++        
++        this.worldServers[0].getScoreboardCycle().tick(this.worldServers[0].getScoreboard());
++
+         this.theProfiler.startSection("snooper");
+ 
+         if (!this.usageSnooper.isSnooperRunning() && this.tickCounter > 100) {
+@@ -1297,12 +1370,12 @@
+         return System.currentTimeMillis();
+     }
+ 
+-    public int getMaxPlayerIdleMinutes() {
+-        return this.maxPlayerIdleMinutes;
++    public long getMaxPlayerIdleTicks() {
++        return this.maxPlayerIdleTicks;
+     }
+ 
+     public void setPlayerIdleTimeout(int idleTimeout) {
+-        this.maxPlayerIdleMinutes = idleTimeout;
++        this.maxPlayerIdleTicks = idleTimeout * 1000L * 60L;
+     }
+ 
+     public MinecraftSessionService getMinecraftSessionService() {

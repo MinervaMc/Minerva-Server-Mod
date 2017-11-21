@@ -1,0 +1,47 @@
+--- net/minecraft/net/minecraft/block/BlockButton.java
++++ net/minecraft/net/minecraft/block/BlockButton.java
+@@ -43,7 +43,7 @@
+     protected BlockButton(boolean wooden) {
+         super(Material.CIRCUITS);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.REDSTONE);
+         this.wooden = wooden;
+     }
+@@ -161,16 +161,18 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (((Boolean)state.getValue(POWERED)).booleanValue()) {
+-            return true;
+-        } else {
++        if (!((Boolean)state.getValue(POWERED)).booleanValue()) {
+             worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 3);
+             worldIn.markBlockRangeForRenderUpdate(pos, pos);
+             this.playClickSound(playerIn, worldIn, pos);
+             this.notifyNeighbors(worldIn, pos, (EnumFacing)state.getValue(FACING));
+             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     protected abstract void playClickSound(EntityPlayer player, World worldIn, BlockPos pos);
+@@ -207,12 +209,6 @@
+         return true;
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         if (!worldIn.isRemote) {
+             if (((Boolean)state.getValue(POWERED)).booleanValue()) {

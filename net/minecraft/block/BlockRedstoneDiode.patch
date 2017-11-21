@@ -1,0 +1,15 @@
+--- net/minecraft/net/minecraft/block/BlockRedstoneDiode.java
++++ net/minecraft/net/minecraft/block/BlockRedstoneDiode.java
+@@ -40,12 +40,6 @@
+         return worldIn.getBlockState(pos.down()).isFullyOpaque();
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         if (!this.isLocked(worldIn, pos, state)) {
+             boolean flag = this.shouldBePowered(worldIn, pos, state);

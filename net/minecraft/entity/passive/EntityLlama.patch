@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/entity/passive/EntityLlama.java
++++ net/minecraft/net/minecraft/entity/passive/EntityLlama.java
+@@ -182,7 +182,7 @@
+             j = 6;
+             f = 10.0F;
+ 
+-            if (this.isTame() && this.getGrowingAge() == 0) {
++            if (this.isTame() && this.getGrowingAge() == 0 && !this.isInLove()) {
+                 flag = true;
+                 this.setInLove(p_190678_1_);
+             }

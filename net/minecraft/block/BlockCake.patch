@@ -1,0 +1,22 @@
+--- net/minecraft/net/minecraft/block/BlockCake.java
++++ net/minecraft/net/minecraft/block/BlockCake.java
+@@ -26,7 +26,7 @@
+     protected BlockCake() {
+         super(Material.CAKE);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, Integer.valueOf(0)));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+     }
+ 
+     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+@@ -52,6 +52,10 @@
+             return this.eatCake(worldIn, pos, state, playerIn) || itemstack.func_190926_b();
+         }
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
++    }
+ 
+     private boolean eatCake(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
+         if (!player.canEat(false)) {

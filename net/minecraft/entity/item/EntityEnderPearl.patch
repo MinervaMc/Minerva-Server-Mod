@@ -1,0 +1,17 @@
+--- net/minecraft/net/minecraft/entity/item/EntityEnderPearl.java
++++ net/minecraft/net/minecraft/entity/item/EntityEnderPearl.java
+@@ -106,10 +106,10 @@
+     public void onUpdate() {
+         EntityLivingBase entitylivingbase = this.getThrower();
+ 
+-        if (entitylivingbase != null && entitylivingbase instanceof EntityPlayer && !entitylivingbase.isEntityAlive()) {
+-            this.setDead();
+-        } else {
++        //if (entitylivingbase != null && entitylivingbase instanceof EntityPlayer && !entitylivingbase.isEntityAlive()) {
++            //this.setDead();
++        //} else {
+             super.onUpdate();
+-        }
++        //}
+     }
+ }

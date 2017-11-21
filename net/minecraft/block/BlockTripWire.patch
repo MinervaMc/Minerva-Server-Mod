@@ -1,0 +1,24 @@
+--- net/minecraft/net/minecraft/block/BlockTripWire.java
++++ net/minecraft/net/minecraft/block/BlockTripWire.java
+@@ -37,7 +37,7 @@
+     public BlockTripWire() {
+         super(Material.CIRCUITS);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(POWERED, Boolean.valueOf(false)).withProperty(ATTACHED, Boolean.valueOf(false)).withProperty(DISARMED, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+     }
+ 
+     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+@@ -134,12 +134,6 @@
+         }
+     }
+ 
+-    /**
+-     * Called randomly when setTickRandomly is set to true (used by e.g. crops to grow, etc.)
+-     */
+-    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+-    }
+-
+     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+         if (!worldIn.isRemote) {
+             if (((Boolean)worldIn.getBlockState(pos).getValue(POWERED)).booleanValue()) {

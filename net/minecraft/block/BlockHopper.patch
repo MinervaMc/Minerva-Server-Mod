@@ -1,0 +1,27 @@
+--- net/minecraft/net/minecraft/block/BlockHopper.java
++++ net/minecraft/net/minecraft/block/BlockHopper.java
+@@ -113,18 +113,19 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             TileEntity tileentity = worldIn.getTileEntity(pos);
+ 
+             if (tileentity instanceof TileEntityHopper) {
+                 playerIn.displayGUIChest((TileEntityHopper)tileentity);
+                 playerIn.addStat(StatList.HOPPER_INSPECTED);
+             }
+-
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     /**

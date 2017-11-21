@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/block/BlockPumpkin.java
++++ net/minecraft/net/minecraft/block/BlockPumpkin.java
+@@ -40,7 +40,7 @@
+     protected BlockPumpkin() {
+         super(Material.GOURD, MapColor.ADOBE);
+         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+     }
+ 

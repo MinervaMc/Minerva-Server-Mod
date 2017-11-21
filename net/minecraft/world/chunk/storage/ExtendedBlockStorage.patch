@@ -1,0 +1,12 @@
+--- net/minecraft/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
++++ net/minecraft/net/minecraft/world/chunk/storage/ExtendedBlockStorage.java
+@@ -73,7 +73,8 @@
+      * Returns whether or not this block storage's Chunk is fully empty, based on its internal reference count.
+      */
+     public boolean isEmpty() {
+-        return this.blockRefCount == 0;
++        //return this.blockRefCount == 0;
++        return false;
+     }
+ 
+     /**

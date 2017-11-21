@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/tileentity/TileEntityPiston.java
++++ net/minecraft/net/minecraft/tileentity/TileEntityPiston.java
+@@ -279,6 +279,8 @@
+             this.invalidate();
+ 
+             if (this.world.getBlockState(this.pos).getBlock() == Blocks.PISTON_EXTENSION) {
++                IBlockState blockstate = this.world.getBlockState(this.pos);
++                this.world.notifyBlockUpdate(pos.offset(blockstate.getValue(BlockPistonExtension.FACING).getOpposite()), blockstate, blockstate, 0);
+                 this.world.setBlockState(this.pos, this.pistonState, 3);
+                 this.world.func_190524_a(this.pos, this.pistonState.getBlock(), this.pos);
+             }

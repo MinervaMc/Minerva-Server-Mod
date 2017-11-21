@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/block/BlockBush.java
++++ net/minecraft/net/minecraft/block/BlockBush.java
+@@ -27,7 +27,7 @@
+ 
+     protected BlockBush(Material materialIn, MapColor mapColorIn) {
+         super(materialIn, mapColorIn);
+-        this.setTickRandomly(true);
++        //this.setTickRandomly(true);
+         this.setCreativeTab(CreativeTabs.DECORATIONS);
+     }
+ 

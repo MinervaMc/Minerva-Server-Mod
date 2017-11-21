@@ -1,0 +1,11 @@
+--- net/minecraft/net/minecraft/world/GameRules.java
++++ net/minecraft/net/minecraft/world/GameRules.java
+@@ -32,6 +32,8 @@
+         this.addGameRule("maxCommandChainLength", "65536", GameRules.ValueType.NUMERICAL_VALUE);
+         this.addGameRule("announceAdvancements", "true", GameRules.ValueType.BOOLEAN_VALUE);
+         this.addGameRule("gameLoopFunction", "-", GameRules.ValueType.FUNCTION);
++        this.addGameRule("onePlayerSleeping", "false", GameRules.ValueType.BOOLEAN_VALUE);
++        this.addGameRule("keepXP", "false", GameRules.ValueType.BOOLEAN_VALUE);
+     }
+ 
+     public void addGameRule(String key, String value, GameRules.ValueType type) {

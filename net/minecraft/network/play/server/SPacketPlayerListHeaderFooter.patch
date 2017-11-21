@@ -1,0 +1,17 @@
+--- net/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
++++ net/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
+@@ -10,6 +10,14 @@
+     private ITextComponent header;
+     private ITextComponent footer;
+ 
++    public SPacketPlayerListHeaderFooter() {
++    }
++
++    public SPacketPlayerListHeaderFooter(ITextComponent headerIn, ITextComponent footerIn) {
++        this.header = headerIn;
++        this.footer = footerIn;
++    }
++    
+     /**
+      * Reads the raw packet data from the data stream.
+      */

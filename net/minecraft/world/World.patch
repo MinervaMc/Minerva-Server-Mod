@@ -1,0 +1,84 @@
+--- net/minecraft/net/minecraft/world/World.java
++++ net/minecraft/net/minecraft/world/World.java
+@@ -30,6 +30,7 @@
+ import net.minecraft.network.Packet;
+ import net.minecraft.pathfinding.PathWorldListener;
+ import net.minecraft.profiler.Profiler;
++import net.minecraft.scoreboard.Cycle;
+ import net.minecraft.scoreboard.Scoreboard;
+ import net.minecraft.server.MinecraftServer;
+ import net.minecraft.tileentity.TileEntity;
+@@ -155,6 +156,9 @@
+      */
+     int[] lightUpdateBlockList;
+ 
++    protected Cycle worldCycle;
++    
++
+     protected World(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client) {
+         this.eventListeners = Lists.newArrayList(this.pathListener);
+         this.theCalendar = Calendar.getInstance();
+@@ -931,7 +935,7 @@
+             if (entityIn instanceof EntityPlayer) {
+                 EntityPlayer entityplayer = (EntityPlayer)entityIn;
+                 this.playerEntities.add(entityplayer);
+-                this.updateAllPlayersSleepingFlag();
++                this.updateEnoughPlayersSleepingFlag();
+             }
+ 
+             this.getChunkFromChunkCoords(i, j).addEntity(entityIn);
+@@ -969,7 +973,7 @@
+ 
+         if (entityIn instanceof EntityPlayer) {
+             this.playerEntities.remove(entityIn);
+-            this.updateAllPlayersSleepingFlag();
++            this.updateEnoughPlayersSleepingFlag();
+             this.onEntityRemoved(entityIn);
+         }
+     }
+@@ -983,7 +987,7 @@
+ 
+         if (entityIn instanceof EntityPlayer) {
+             this.playerEntities.remove(entityIn);
+-            this.updateAllPlayersSleepingFlag();
++            this.updateEnoughPlayersSleepingFlag();
+         }
+ 
+         int i = entityIn.chunkCoordX;
+@@ -1326,12 +1330,6 @@
+ 
+         this.processingLoadedTiles = false;
+ 
+-        if (!this.tileEntitiesToBeRemoved.isEmpty()) {
+-            this.tickableTileEntities.removeAll(this.tileEntitiesToBeRemoved);
+-            this.loadedTileEntityList.removeAll(this.tileEntitiesToBeRemoved);
+-            this.tileEntitiesToBeRemoved.clear();
+-        }
+-
+         this.theProfiler.endStartSection("pendingBlockEntities");
+ 
+         if (!this.addedTileEntityList.isEmpty()) {
+@@ -1476,6 +1474,14 @@
+         }
+     }
+ 
++    public void removeUnloadedTileEntities () {
++        if (!this.tileEntitiesToBeRemoved.isEmpty()) {
++            this.tickableTileEntities.removeAll(this.tileEntitiesToBeRemoved);
++            this.loadedTileEntityList.removeAll(this.tileEntitiesToBeRemoved);
++            this.tileEntitiesToBeRemoved.clear();
++        }
++    }
++
+     /**
+      * Returns true if there are no solid, live entities in the specified AxisAlignedBB
+      */
+@@ -2702,7 +2708,7 @@
+     /**
+      * Updates the flag that indicates whether or not all players in the world are sleeping.
+      */
+-    public void updateAllPlayersSleepingFlag() {
++    public void updateEnoughPlayersSleepingFlag() {
+     }
+ 
+     public float getThunderStrength(float delta) {

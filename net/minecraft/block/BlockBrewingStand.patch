@@ -1,0 +1,27 @@
+--- net/minecraft/net/minecraft/block/BlockBrewingStand.java
++++ net/minecraft/net/minecraft/block/BlockBrewingStand.java
+@@ -82,18 +82,19 @@
+     }
+ 
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+-        if (worldIn.isRemote) {
+-            return true;
+-        } else {
++        if (!worldIn.isRemote) {
+             TileEntity tileentity = worldIn.getTileEntity(pos);
+ 
+             if (tileentity instanceof TileEntityBrewingStand) {
+                 playerIn.displayGUIChest((TileEntityBrewingStand)tileentity);
+                 playerIn.addStat(StatList.BREWINGSTAND_INTERACTION);
+             }
+-
+-            return true;
+         }
++        return true;
++    }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
+     }
+ 
+     /**

@@ -1,0 +1,19 @@
+--- net/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
++++ net/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
+@@ -59,7 +59,7 @@
+         type.configurePlayerCapabilities(this.thisPlayerMP.capabilities);
+         this.thisPlayerMP.sendPlayerAbilities();
+         this.thisPlayerMP.mcServer.getPlayerList().sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_GAME_MODE, new EntityPlayerMP[] {this.thisPlayerMP}));
+-        this.theWorld.updateAllPlayersSleepingFlag();
++        this.theWorld.updateEnoughPlayersSleepingFlag();
+     }
+ 
+     public GameType getGameType() {
+@@ -178,6 +178,7 @@
+                 this.destroyPos = pos;
+                 int i = (int)(f * 10.0F);
+                 this.theWorld.sendBlockBreakProgress(this.thisPlayerMP.getEntityId(), pos, i);
++                this.theWorld.notifyBlockUpdate(pos, iblockstate, iblockstate, 0);
+                 this.durabilityRemainingOnBlock = i;
+             }
+         }

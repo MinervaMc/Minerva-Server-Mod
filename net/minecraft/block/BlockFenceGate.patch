@@ -1,0 +1,13 @@
+--- net/minecraft/net/minecraft/block/BlockFenceGate.java
++++ net/minecraft/net/minecraft/block/BlockFenceGate.java
+@@ -132,6 +132,10 @@
+         worldIn.playEvent(playerIn, ((Boolean)state.getValue(OPEN)).booleanValue() ? 1008 : 1014, pos, 0);
+         return true;
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        return true;
++    }
+ 
+     /**
+      * Called when a neighboring block was changed and marks that this state should perform any checks during a neighbor

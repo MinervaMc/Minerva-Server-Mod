@@ -1,0 +1,10 @@
+--- net/minecraft/net/minecraft/command/ServerCommandManager.java
++++ net/minecraft/net/minecraft/command/ServerCommandManager.java
+@@ -38,6 +38,7 @@
+ 
+     public ServerCommandManager(MinecraftServer serverIn) {
+         this.server = serverIn;
++        this.registerCommand(new CommandAfk());
+         this.registerCommand(new CommandTime());
+         this.registerCommand(new CommandGameMode());
+         this.registerCommand(new CommandDifficulty());

@@ -1,0 +1,23 @@
+--- net/minecraft/net/minecraft/block/BlockFence.java
++++ net/minecraft/net/minecraft/block/BlockFence.java
+@@ -131,7 +131,7 @@
+     protected static boolean func_194142_e(Block p_194142_0_) {
+         return Block.func_193382_c(p_194142_0_) || p_194142_0_ == Blocks.BARRIER || p_194142_0_ == Blocks.MELON_BLOCK || p_194142_0_ == Blocks.PUMPKIN || p_194142_0_ == Blocks.LIT_PUMPKIN;
+     }
+-
++// todo: fix severely broken vanilla code
+     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+         if (!worldIn.isRemote) {
+             return ItemLead.attachToFence(playerIn, worldIn, pos);
+@@ -140,6 +140,11 @@
+             return itemstack.getItem() == Items.LEAD || itemstack.func_190926_b();
+         }
+     }
++    
++    public boolean canActivateBlock(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
++        ItemStack itemstack = playerIn.getHeldItem(hand);
++        return itemstack.getItem() == Items.LEAD || itemstack.func_190926_b();
++    }
+ 
+     /**
+      * Convert the BlockState into the correct metadata value
