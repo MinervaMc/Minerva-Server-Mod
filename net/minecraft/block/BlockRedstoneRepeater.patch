@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockRedstoneRepeater.java
-+++ net/minecraft/net/minecraft/block/BlockRedstoneRepeater.java
+--- net/minecraft/block/BlockRedstoneRepeater.java
++++ net/minecraft/block/BlockRedstoneRepeater.java
 @@ -68,6 +68,10 @@
              return true;
          }

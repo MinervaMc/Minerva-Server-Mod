@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/network/NetHandlerPlayServer.java
-+++ net/minecraft/net/minecraft/network/NetHandlerPlayServer.java
+--- net/minecraft/network/NetHandlerPlayServer.java
++++ net/minecraft/network/NetHandlerPlayServer.java
 @@ -40,6 +40,7 @@
  import net.minecraft.inventory.EntityEquipmentSlot;
  import net.minecraft.inventory.IInventory;

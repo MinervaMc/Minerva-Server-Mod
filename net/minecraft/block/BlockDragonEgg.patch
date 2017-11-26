@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockDragonEgg.java
-+++ net/minecraft/net/minecraft/block/BlockDragonEgg.java
+--- net/minecraft/block/BlockDragonEgg.java
++++ net/minecraft/block/BlockDragonEgg.java
 @@ -71,6 +71,10 @@
          this.teleport(worldIn, pos);
          return true;

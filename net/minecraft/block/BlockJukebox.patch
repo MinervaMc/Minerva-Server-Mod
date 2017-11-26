@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockJukebox.java
-+++ net/minecraft/net/minecraft/block/BlockJukebox.java
+--- net/minecraft/block/BlockJukebox.java
++++ net/minecraft/block/BlockJukebox.java
 @@ -47,6 +47,10 @@
              return false;
          }

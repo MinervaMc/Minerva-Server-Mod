@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
-+++ net/minecraft/net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
+--- net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
++++ net/minecraft/network/play/server/SPacketPlayerListHeaderFooter.java
 @@ -10,6 +10,14 @@
      private ITextComponent header;
      private ITextComponent footer;

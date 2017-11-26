@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockChest.java
-+++ net/minecraft/net/minecraft/block/BlockChest.java
+--- net/minecraft/block/BlockChest.java
++++ net/minecraft/block/BlockChest.java
 @@ -348,9 +348,7 @@
      }
  

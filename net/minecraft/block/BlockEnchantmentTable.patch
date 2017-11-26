@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockEnchantmentTable.java
-+++ net/minecraft/net/minecraft/block/BlockEnchantmentTable.java
+--- net/minecraft/block/BlockEnchantmentTable.java
++++ net/minecraft/block/BlockEnchantmentTable.java
 @@ -58,17 +58,18 @@
      }
  

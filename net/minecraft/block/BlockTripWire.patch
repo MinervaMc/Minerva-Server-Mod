@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockTripWire.java
-+++ net/minecraft/net/minecraft/block/BlockTripWire.java
+--- net/minecraft/block/BlockTripWire.java
++++ net/minecraft/block/BlockTripWire.java
 @@ -37,7 +37,7 @@
      public BlockTripWire() {
          super(Material.CIRCUITS);

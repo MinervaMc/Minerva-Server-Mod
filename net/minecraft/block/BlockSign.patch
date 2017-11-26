@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockSign.java
-+++ net/minecraft/net/minecraft/block/BlockSign.java
+--- net/minecraft/block/BlockSign.java
++++ net/minecraft/block/BlockSign.java
 @@ -82,6 +82,15 @@
              return tileentity instanceof TileEntitySign ? ((TileEntitySign)tileentity).executeCommand(playerIn) : false;
          }

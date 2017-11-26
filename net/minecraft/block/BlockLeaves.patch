@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockLeaves.java
-+++ net/minecraft/net/minecraft/block/BlockLeaves.java
+--- net/minecraft/block/BlockLeaves.java
++++ net/minecraft/block/BlockLeaves.java
 @@ -209,3 +209,208 @@
  
      public abstract BlockPlanks.EnumType getWoodType(int meta);

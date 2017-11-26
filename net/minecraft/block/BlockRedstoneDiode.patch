@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockRedstoneDiode.java
-+++ net/minecraft/net/minecraft/block/BlockRedstoneDiode.java
+--- net/minecraft/block/BlockRedstoneDiode.java
++++ net/minecraft/block/BlockRedstoneDiode.java
 @@ -40,12 +40,6 @@
          return worldIn.getBlockState(pos.down()).isFullyOpaque();
      }

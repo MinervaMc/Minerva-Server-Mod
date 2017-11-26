@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockCommandBlock.java
-+++ net/minecraft/net/minecraft/block/BlockCommandBlock.java
+--- net/minecraft/block/BlockCommandBlock.java
++++ net/minecraft/block/BlockCommandBlock.java
 @@ -135,6 +135,10 @@
              return false;
          }

@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/entity/item/EntityEnderPearl.java
-+++ net/minecraft/net/minecraft/entity/item/EntityEnderPearl.java
+--- net/minecraft/entity/item/EntityEnderPearl.java
++++ net/minecraft/entity/item/EntityEnderPearl.java
 @@ -106,10 +106,10 @@
      public void onUpdate() {
          EntityLivingBase entitylivingbase = this.getThrower();

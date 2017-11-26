@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/entity/EntityLiving.java
-+++ net/minecraft/net/minecraft/entity/EntityLiving.java
+--- net/minecraft/entity/EntityLiving.java
++++ net/minecraft/entity/EntityLiving.java
 @@ -659,7 +659,37 @@
          if (this.persistenceRequired) {
              this.entityAge = 0;

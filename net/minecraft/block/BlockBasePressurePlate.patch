@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockBasePressurePlate.java
-+++ net/minecraft/net/minecraft/block/BlockBasePressurePlate.java
+--- net/minecraft/block/BlockBasePressurePlate.java
++++ net/minecraft/block/BlockBasePressurePlate.java
 @@ -33,7 +33,7 @@
      protected BlockBasePressurePlate(Material materialIn, MapColor mapColorIn) {
          super(materialIn, mapColorIn);

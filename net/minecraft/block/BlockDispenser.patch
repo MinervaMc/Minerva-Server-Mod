@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockDispenser.java
-+++ net/minecraft/net/minecraft/block/BlockDispenser.java
+--- net/minecraft/block/BlockDispenser.java
++++ net/minecraft/block/BlockDispenser.java
 @@ -85,9 +85,7 @@
      }
  

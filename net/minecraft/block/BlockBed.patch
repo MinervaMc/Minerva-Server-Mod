@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockBed.java
-+++ net/minecraft/net/minecraft/block/BlockBed.java
+--- net/minecraft/block/BlockBed.java
++++ net/minecraft/block/BlockBed.java
 @@ -116,6 +116,10 @@
              }
          }

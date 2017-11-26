@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockBush.java
-+++ net/minecraft/net/minecraft/block/BlockBush.java
+--- net/minecraft/block/BlockBush.java
++++ net/minecraft/block/BlockBush.java
 @@ -27,7 +27,7 @@
  
      protected BlockBush(Material materialIn, MapColor mapColorIn) {

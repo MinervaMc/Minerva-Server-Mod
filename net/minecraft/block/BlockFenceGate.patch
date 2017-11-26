@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockFenceGate.java
-+++ net/minecraft/net/minecraft/block/BlockFenceGate.java
+--- net/minecraft/block/BlockFenceGate.java
++++ net/minecraft/block/BlockFenceGate.java
 @@ -132,6 +132,10 @@
          worldIn.playEvent(playerIn, ((Boolean)state.getValue(OPEN)).booleanValue() ? 1008 : 1014, pos, 0);
          return true;

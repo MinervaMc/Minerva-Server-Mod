@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockRailDetector.java
-+++ net/minecraft/net/minecraft/block/BlockRailDetector.java
+--- net/minecraft/block/BlockRailDetector.java
++++ net/minecraft/block/BlockRailDetector.java
 @@ -34,7 +34,7 @@
      public BlockRailDetector() {
          super(true);

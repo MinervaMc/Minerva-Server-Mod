@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/entity/player/EntityPlayerMP.java
-+++ net/minecraft/net/minecraft/entity/player/EntityPlayerMP.java
+--- net/minecraft/entity/player/EntityPlayerMP.java
++++ net/minecraft/entity/player/EntityPlayerMP.java
 @@ -100,6 +100,7 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;

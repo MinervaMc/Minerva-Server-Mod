@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockCauldron.java
-+++ net/minecraft/net/minecraft/block/BlockCauldron.java
+--- net/minecraft/block/BlockCauldron.java
++++ net/minecraft/block/BlockCauldron.java
 @@ -198,6 +198,10 @@
              }
          }

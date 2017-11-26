@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/command/ServerCommandManager.java
-+++ net/minecraft/net/minecraft/command/ServerCommandManager.java
+--- net/minecraft/command/ServerCommandManager.java
++++ net/minecraft/command/ServerCommandManager.java
 @@ -38,6 +38,7 @@
  
      public ServerCommandManager(MinecraftServer serverIn) {

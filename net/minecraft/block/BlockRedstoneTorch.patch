@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockRedstoneTorch.java
-+++ net/minecraft/net/minecraft/block/BlockRedstoneTorch.java
+--- net/minecraft/block/BlockRedstoneTorch.java
++++ net/minecraft/block/BlockRedstoneTorch.java
 @@ -53,7 +53,7 @@
  
      protected BlockRedstoneTorch(boolean isOn) {

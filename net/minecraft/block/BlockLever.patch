@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockLever.java
-+++ net/minecraft/net/minecraft/block/BlockLever.java
+--- net/minecraft/block/BlockLever.java
++++ net/minecraft/block/BlockLever.java
 @@ -148,9 +148,7 @@
      }
  

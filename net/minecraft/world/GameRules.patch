@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/world/GameRules.java
-+++ net/minecraft/net/minecraft/world/GameRules.java
+--- net/minecraft/world/GameRules.java
++++ net/minecraft/world/GameRules.java
 @@ -32,6 +32,8 @@
          this.addGameRule("maxCommandChainLength", "65536", GameRules.ValueType.NUMERICAL_VALUE);
          this.addGameRule("announceAdvancements", "true", GameRules.ValueType.BOOLEAN_VALUE);

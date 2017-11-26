@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockShulkerBox.java
-+++ net/minecraft/net/minecraft/block/BlockShulkerBox.java
+--- net/minecraft/block/BlockShulkerBox.java
++++ net/minecraft/block/BlockShulkerBox.java
 @@ -103,6 +103,20 @@
              }
          }

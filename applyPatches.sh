@@ -13,11 +13,11 @@ origDir=$1
 modifiedDir=$2
 patchDir=$3
 
-fileCount=$(find $modifiedDir -type f | wc -l)
+fileCount=$(find $patchDir -type f | wc -l)
 currentFileNo="0"
 echo "$fileCount files total"
 
-
+cp -n -R $origDir $(dirname $modifiedDir)
 
 function traverse() {
 	for file in "$1"/*
@@ -25,44 +25,44 @@ function traverse() {
 		if [ -d "${file}" ] ; then
 			traverse "${file}"
 		else
-			file=${file#$modifiedDir/}
+			file=${file#$patchDir/}
 			currentFileNo=$(($currentFileNo + 1))
 			progress=$(($currentFileNo * 100 / $fileCount))
 			echo -en "\r$progress%, "
-
-
-			if [ ! -f "$origDir/$file" ]
+			filename=$(basename "$file")
+			extension="${filename##*.}"
+			if [ "$extension" != "patch" ]
 			then
-				outName=$patchDir/$file
-				patchNew=$(cat "$modifiedDir/$file")
+				outName=$modifiedDir/$file
+				patchedFile=$(cat "$patchDir/$file")
 			else
-				outName=$patchDir/${file%.*}.patch
-				patchNew=$(diff -u --label net/$file "$origDir/$file" --label net/$file "$modifiedDir/$file")
-
-
-
+				outName=${file%.*}.java
+				patch --quiet -o /tmp/patched_mc_code.java $origDir/$outName $patchDir/$file
+				patchedFile=$(cat /tmp/patched_mc_code.java) # why can't patch just output on stdout???
+				rm /tmp/patched_mc_code.java
+				outName="$modifiedDir/$outName"
 			fi
-			echo -en "Diffing net/$file\033[K"
+			echo -en "Patching $outName\033[K"
 			if [ -f "$outName" ]
 			then
-				patchCut=$(echo "$patchNew" | tail -n +3)
-				patchOld=$(cat "$outName" | tail -n +3)
-				if [ "$patchCut" != "$patchOld" ] ; then
+
+				patchedOld=$(cat "$outName")
+				if [ "$patchedFile" != "$patchedOld" ] ; then
 					echo -e "\n$outName changed"
 					mkdir -p $(dirname ${outName})
-					echo "$patchNew" > "$outName"
+					echo "$patchedFile" > "$outName"
 				fi
 			else
-				if [[ $patchNew = *[![:space:]]* ]] ; then
+				if [[ $patchedFile = *[![:space:]]* ]] ; then
 					echo -e "\nNew file $outName"
 					mkdir -p $(dirname ${outName})
-					echo "$patchNew" > "$outName"
+					echo "$patchedFile" > "$outName"
 				fi
 			fi
 		fi
 	done
 }
 
-traverse "$modifiedDir"
+traverse "$patchDir"
 
 echo -en "\r\033[K"

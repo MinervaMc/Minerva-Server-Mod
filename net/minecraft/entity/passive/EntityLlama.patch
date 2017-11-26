@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/entity/passive/EntityLlama.java
-+++ net/minecraft/net/minecraft/entity/passive/EntityLlama.java
+--- net/minecraft/entity/passive/EntityLlama.java
++++ net/minecraft/entity/passive/EntityLlama.java
 @@ -182,7 +182,7 @@
              j = 6;
              f = 10.0F;

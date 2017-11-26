@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockNote.java
-+++ net/minecraft/net/minecraft/block/BlockNote.java
+--- net/minecraft/block/BlockNote.java
++++ net/minecraft/block/BlockNote.java
 @@ -50,9 +50,7 @@
      }
  

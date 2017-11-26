@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockStructure.java
-+++ net/minecraft/net/minecraft/block/BlockStructure.java
+--- net/minecraft/block/BlockStructure.java
++++ net/minecraft/block/BlockStructure.java
 @@ -37,6 +37,10 @@
          TileEntity tileentity = worldIn.getTileEntity(pos);
          return tileentity instanceof TileEntityStructure ? ((TileEntityStructure)tileentity).usedBy(playerIn) : false;

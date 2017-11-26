@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/world/World.java
-+++ net/minecraft/net/minecraft/world/World.java
+--- net/minecraft/world/World.java
++++ net/minecraft/world/World.java
 @@ -30,6 +30,7 @@
  import net.minecraft.network.Packet;
  import net.minecraft.pathfinding.PathWorldListener;

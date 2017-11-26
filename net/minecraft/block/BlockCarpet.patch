@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockCarpet.java
-+++ net/minecraft/net/minecraft/block/BlockCarpet.java
+--- net/minecraft/block/BlockCarpet.java
++++ net/minecraft/block/BlockCarpet.java
 @@ -22,7 +22,7 @@
      protected BlockCarpet() {
          super(Material.CARPET);

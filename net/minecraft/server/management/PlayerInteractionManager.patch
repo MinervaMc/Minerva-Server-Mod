@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
-+++ net/minecraft/net/minecraft/server/management/PlayerInteractionManager.java
+--- net/minecraft/server/management/PlayerInteractionManager.java
++++ net/minecraft/server/management/PlayerInteractionManager.java
 @@ -59,7 +59,7 @@
          type.configurePlayerCapabilities(this.thisPlayerMP.capabilities);
          this.thisPlayerMP.sendPlayerAbilities();

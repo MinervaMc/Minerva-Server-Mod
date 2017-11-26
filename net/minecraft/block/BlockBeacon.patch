@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockBeacon.java
-+++ net/minecraft/net/minecraft/block/BlockBeacon.java
+--- net/minecraft/block/BlockBeacon.java
++++ net/minecraft/block/BlockBeacon.java
 @@ -35,18 +35,19 @@
      }
  

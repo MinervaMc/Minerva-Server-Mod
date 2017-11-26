@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockTrapDoor.java
-+++ net/minecraft/net/minecraft/block/BlockTrapDoor.java
+--- net/minecraft/block/BlockTrapDoor.java
++++ net/minecraft/block/BlockTrapDoor.java
 @@ -94,6 +94,10 @@
              return true;
          }

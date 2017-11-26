@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/tileentity/TileEntityPiston.java
-+++ net/minecraft/net/minecraft/tileentity/TileEntityPiston.java
+--- net/minecraft/tileentity/TileEntityPiston.java
++++ net/minecraft/tileentity/TileEntityPiston.java
 @@ -279,6 +279,8 @@
              this.invalidate();
  

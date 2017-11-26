@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockFence.java
-+++ net/minecraft/net/minecraft/block/BlockFence.java
+--- net/minecraft/block/BlockFence.java
++++ net/minecraft/block/BlockFence.java
 @@ -131,7 +131,7 @@
      protected static boolean func_194142_e(Block p_194142_0_) {
          return Block.func_193382_c(p_194142_0_) || p_194142_0_ == Blocks.BARRIER || p_194142_0_ == Blocks.MELON_BLOCK || p_194142_0_ == Blocks.PUMPKIN || p_194142_0_ == Blocks.LIT_PUMPKIN;

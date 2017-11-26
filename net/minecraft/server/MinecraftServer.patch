@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/server/MinecraftServer.java
-+++ net/minecraft/net/minecraft/server/MinecraftServer.java
+--- net/minecraft/server/MinecraftServer.java
++++ net/minecraft/server/MinecraftServer.java
 @@ -27,6 +27,7 @@
  import java.util.Collections;
  import java.util.Date;

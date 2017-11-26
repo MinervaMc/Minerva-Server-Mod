@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockAnvil.java
-+++ net/minecraft/net/minecraft/block/BlockAnvil.java
+--- net/minecraft/block/BlockAnvil.java
++++ net/minecraft/block/BlockAnvil.java
 @@ -86,6 +86,10 @@
  
          return true;

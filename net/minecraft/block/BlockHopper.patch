@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockHopper.java
-+++ net/minecraft/net/minecraft/block/BlockHopper.java
+--- net/minecraft/block/BlockHopper.java
++++ net/minecraft/block/BlockHopper.java
 @@ -113,18 +113,19 @@
      }
  

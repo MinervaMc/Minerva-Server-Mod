@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockWorkbench.java
-+++ net/minecraft/net/minecraft/block/BlockWorkbench.java
+--- net/minecraft/block/BlockWorkbench.java
++++ net/minecraft/block/BlockWorkbench.java
 @@ -24,13 +24,15 @@
      }
  

@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockSnowBlock.java
-+++ net/minecraft/net/minecraft/block/BlockSnowBlock.java
+--- net/minecraft/block/BlockSnowBlock.java
++++ net/minecraft/block/BlockSnowBlock.java
 @@ -13,7 +13,7 @@
  public class BlockSnowBlock extends Block {
      protected BlockSnowBlock() {

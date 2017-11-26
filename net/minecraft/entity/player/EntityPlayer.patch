@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/entity/player/EntityPlayer.java
-+++ net/minecraft/net/minecraft/entity/player/EntityPlayer.java
+--- net/minecraft/entity/player/EntityPlayer.java
++++ net/minecraft/entity/player/EntityPlayer.java
 @@ -1344,7 +1344,8 @@
          this.motionZ = 0.0D;
  

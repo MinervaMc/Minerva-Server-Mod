@@ -1,0 +1,10 @@
+--- net/minecraft/world/Teleporter.java
++++ net/minecraft/world/Teleporter.java
+@@ -150,6 +150,7 @@
+ 
+             if (entityIn instanceof EntityPlayerMP) {
+                 ((EntityPlayerMP)entityIn).connection.setPlayerLocation(d5, d6, d7, entityIn.rotationYaw, entityIn.rotationPitch);
++                ((EntityPlayerMP)entityIn).connection.captureCurrentPosition();
+             } else {
+                 entityIn.setLocationAndAngles(d5, d6, d7, entityIn.rotationYaw, entityIn.rotationPitch);
+             }

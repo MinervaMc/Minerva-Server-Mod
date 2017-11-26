@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockButton.java
-+++ net/minecraft/net/minecraft/block/BlockButton.java
+--- net/minecraft/block/BlockButton.java
++++ net/minecraft/block/BlockButton.java
 @@ -43,7 +43,7 @@
      protected BlockButton(boolean wooden) {
          super(Material.CIRCUITS);

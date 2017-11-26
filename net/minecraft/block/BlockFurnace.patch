@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockFurnace.java
-+++ net/minecraft/net/minecraft/block/BlockFurnace.java
+--- net/minecraft/block/BlockFurnace.java
++++ net/minecraft/block/BlockFurnace.java
 @@ -72,18 +72,19 @@
      }
  

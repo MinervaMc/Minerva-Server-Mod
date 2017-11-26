@@ -1,5 +1,5 @@
---- net/minecraft/net/minecraft/block/BlockEnderChest.java
-+++ net/minecraft/net/minecraft/block/BlockEnderChest.java
+--- net/minecraft/block/BlockEnderChest.java
++++ net/minecraft/block/BlockEnderChest.java
 @@ -98,19 +98,17 @@
          TileEntity tileentity = worldIn.getTileEntity(pos);
  
