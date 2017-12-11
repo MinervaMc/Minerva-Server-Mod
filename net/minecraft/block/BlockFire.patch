@@ -1,0 +1,14 @@
+--- net/minecraft/block/BlockFire.java
++++ net/minecraft/block/BlockFire.java
+@@ -142,9 +142,10 @@
+                     worldIn.setBlockState(pos, state, 4);
+                 }
+ 
+-                worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + rand.nextInt(10));
++                //worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + rand.nextInt(10)); // MC-119994
+ 
+                 if (!flag) {
++                    worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + rand.nextInt(10)); // MC-119994
+                     if (!this.canNeighborCatchFire(worldIn, pos)) {
+                         if (!worldIn.getBlockState(pos.down()).isFullyOpaque() || i > 3) {
+                             worldIn.setBlockToAir(pos);

@@ -19,50 +19,39 @@ echo "$fileCount files total"
 
 
 
-function traverse() {
-	for file in "$1"/*
-	do
-		if [ -d "${file}" ] ; then
-			traverse "${file}"
-		else
-			file=${file#$modifiedDir/}
-			currentFileNo=$(($currentFileNo + 1))
-			progress=$(($currentFileNo * 100 / $fileCount))
-			echo -en "\r$progress%, "
+for file in $(find $modifiedDir -type f -not -path '*/\.*') ; do
+	file=${file#$modifiedDir/}
+	currentFileNo=$(($currentFileNo + 1))
+	progress=$(($currentFileNo * 100 / $fileCount))
+	echo -en "\r$progress%, "
 
 
-			if [ ! -f "$origDir/$file" ]
-			then
-				outName=$patchDir/$file
-				patchNew=$(cat "$modifiedDir/$file")
-			else
-				outName=$patchDir/${file%.*}.patch
-				patchNew=$(diff -u --label net/$file "$origDir/$file" --label net/$file "$modifiedDir/$file")
+	if [ ! -f "$origDir/$file" ] ; then
+		outName=$patchDir/$file
+		patchNew=$(cat "$modifiedDir/$file")
+	else
+		outName=$patchDir/${file%.*}.patch
+		patchNew=$(diff -u --label net/$file "$origDir/$file" --label net/$file "$modifiedDir/$file")
 
 
 
-			fi
-			echo -en "Diffing net/$file\033[K"
-			if [ -f "$outName" ]
-			then
-				patchCut=$(echo "$patchNew" | tail -n +3)
-				patchOld=$(cat "$outName" | tail -n +3)
-				if [ "$patchCut" != "$patchOld" ] ; then
-					echo -e "\n$outName changed"
-					mkdir -p $(dirname ${outName})
-					echo "$patchNew" > "$outName"
-				fi
-			else
-				if [[ $patchNew = *[![:space:]]* ]] ; then
-					echo -e "\nNew file $outName"
-					mkdir -p $(dirname ${outName})
-					echo "$patchNew" > "$outName"
-				fi
-			fi
+	fi
+	echo -en "Diffing net/$file\033[K"
+	if [ -f "$outName" ] ; then
+		patchCut=$(echo "$patchNew" | tail -n +3)
+		patchOld=$(cat "$outName" | tail -n +3)
+		if [ "$patchCut" != "$patchOld" ] ; then
+			echo -e "\n$outName changed"
+			mkdir -p $(dirname ${outName})
+			echo "$patchNew" > "$outName"
 		fi
-	done
-}
-
-traverse "$modifiedDir"
+	else
+		if [[ $patchNew = *[![:space:]]* ]] ; then
+			echo -e "\nNew file $outName"
+			mkdir -p $(dirname ${outName})
+			echo "$patchNew" > "$outName"
+		fi
+	fi
+done
 
 echo -en "\r\033[K"

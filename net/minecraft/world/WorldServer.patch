@@ -142,7 +142,18 @@
          } else {
              return false;
          }
-@@ -1162,4 +1186,8 @@
+@@ -458,9 +482,8 @@
+                     if (iblockstate.getMaterial() != Material.AIR && iblockstate.getBlock() == blockIn) {
+                         iblockstate.getBlock().updateTick(this, pos, iblockstate, this.rand);
+                     }
++                    return; // Fix MC-120709
+                 }
+-
+-                return;
+             }
+ 
+             delay = 1;
+@@ -1162,4 +1185,8 @@
          private ServerBlockEventList() {
          }
      }
