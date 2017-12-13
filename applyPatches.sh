@@ -4,7 +4,7 @@
 #TODO: check if folder names end with "net" or search for an alternative
 
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-	echo "Please run this script again with the clean decompile sources as an argument. In most cases this will be ../work/decompile-XXXX"
+	echo "Please run this script again with the clean decompiled sources, the modified decompiled sources and the patch folder as an argument. Example: ./applyPatches.sh $path/minecraft_server_orig/net ../minecraft_server_patched/net net"
 	exit
 fi
 
