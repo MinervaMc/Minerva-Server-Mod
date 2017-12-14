@@ -16,7 +16,7 @@
      }
  
      /**
-@@ -243,8 +245,12 @@
+@@ -243,12 +245,16 @@
              --this.itemDropThreshold;
          }
  
@@ -31,6 +31,11 @@
          }
      }
  
+-    private void captureCurrentPosition() {
++    public void captureCurrentPosition() {
+         this.firstGoodX = this.playerEntity.posX;
+         this.firstGoodY = this.playerEntity.posY;
+         this.firstGoodZ = this.playerEntity.posZ;
 @@ -505,6 +511,10 @@
                              this.playerEntity.setPositionAndRotation(d4, d5, d6, f, f1);
                              this.playerEntity.addMovementStat(this.playerEntity.posX - d0, this.playerEntity.posY - d1, this.playerEntity.posZ - d2);
